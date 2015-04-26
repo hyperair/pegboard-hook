@@ -11,19 +11,24 @@ peg_stem_d = 4.4;
 peg_rounding_r = 0.5;
 
 plate_width = 8.45;
-plate_length = peg_distance + peg_flange_d;
-plate_thickness = 2;
+plate_length = 20;
+plate_thickness = 3.5;
 
-hook_thickness = 4;
-hook_depth = 40;
+hook_thickness = 10;
+hook_width = 4;
+hook_length = 40;
 hook_retainer_length = 20;
+hook_retainer_thickness = 6;
 
 hook_rounding_r = 5;
 
 peg_positions = [
-    [0, 0],
-    [0, peg_distance]
+    [0, 0]
+    // [0, peg_distance]
 ];
+
+plate_offset = [0, -plate_length / 2];
+hook_offset = [0, -plate_length / 2 + 1];
 
 $fs = 0.2;
 $fa = 1;
@@ -37,7 +42,9 @@ module round (r)
 
 module peg ()
 {
-    fillet (r = rounding_r, steps = get_fragments_from_r (rounding_r) / 4) {
+    fillet (r = peg_rounding_r,
+        steps = get_fragments_from_r (peg_rounding_r) / 4) {
+
         peg_stem ();
 
         translate ([0, 0, -(peg_flange_thickness + peg_stem_length)])
@@ -78,6 +85,7 @@ module place_peg (i = -1)
 
 module plate ()
 {
+    translate (plate_offset)
     linear_extrude (height = plate_thickness)
     hull () {
         circle (d = plate_width);
@@ -92,16 +100,17 @@ module plate ()
 
 module hook ()
 {
+    translate (hook_offset)
     rotate (-90, Y)
-    linear_extrude (hook_thickness, center = true)
+    linear_extrude (hook_width, center = true)
     round (-1.5)
     round (1.5)
     union () {
-        square ([hook_depth, hook_thickness]);
+        square ([hook_length, hook_thickness]);
 
-        translate ([hook_depth, 0])
+        translate ([hook_length, 0])
         rotate (60, Z)
-        square ([hook_retainer_length, hook_thickness]);
+        square ([hook_retainer_length, hook_retainer_thickness]);
     }
 }
 
