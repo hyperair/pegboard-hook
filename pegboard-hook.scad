@@ -2,13 +2,7 @@ use <fillet.scad>
 use <MCAD/general/facets.scad>
 include <MCAD/units/metric.scad>
 
-peg_distance = 25;
-peg_flange_thickness = 2;
-peg_flange_d = 8.45;
-peg_stem_length = 2;
-peg_stem_d = 4.4;
-
-peg_rounding_r = 0.5;
+use <peg.scad>
 
 plate_width = 8.45;
 plate_length = 20;
@@ -38,36 +32,6 @@ module round (r)
     offset (r = -r)
     offset (r = r)
     children ();
-}
-
-module peg ()
-{
-    fillet (r = peg_rounding_r,
-        steps = get_fragments_from_r (peg_rounding_r) / 4) {
-
-        peg_stem ();
-
-        translate ([0, 0, -(peg_flange_thickness + peg_stem_length)])
-        cylinder (d = peg_flange_d, h = peg_flange_thickness);
-    }
-}
-
-module peg_stem ()
-{
-    total_length = peg_stem_length + peg_flange_thickness;
-
-    translate ([0, 0, -peg_stem_length - epsilon])
-    linear_extrude (height = peg_stem_length + epsilon * 2)
-    intersection () {
-        circle (d = peg_flange_d);
-
-        hull () {
-            circle (d = peg_stem_d);
-
-            translate ([0, peg_flange_d])
-            circle (d = peg_stem_d);
-        }
-    }
 }
 
 module place_peg (i = -1)
@@ -118,17 +82,6 @@ place_peg ()
 peg ();
 
 plate ();
-
-// plate fillet
-for (i = [0 : len (peg_positions)])
-fillet (r = peg_rounding_r, steps = get_fragments_from_r (peg_rounding_r) / 4,
-    include = false) {
-
-    plate ();
-
-    place_peg (i)
-    peg_stem ();
-}
 
 hook ();
 
