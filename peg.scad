@@ -33,7 +33,7 @@ module peg_stem ()
     translate ([0, 0, -peg_stem_length - epsilon])
     linear_extrude (height = peg_stem_length + epsilon * 2)
     intersection () {
-        circle (d = peg_flange_d);
+        peg_flange_2d ();
 
         hull () {
             circle (d = peg_stem_d);
@@ -47,7 +47,13 @@ module peg_stem ()
 module peg_flange ()
 {
     translate ([0, 0, -(peg_flange_thickness + peg_stem_length)])
-    cylinder (d = peg_flange_d, h = peg_flange_thickness);
+    linear_extrude (height = peg_flange_thickness)
+    peg_flange_2d ();
+}
+
+module peg_flange_2d ()
+{
+    circle (d = peg_flange_d);
 }
 
 peg ();
