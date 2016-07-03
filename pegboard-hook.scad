@@ -12,7 +12,7 @@ hook_thickness = 10;
 hook_width = 4;
 hook_length = 40;
 hook_retainer_length = 20;
-hook_retainer_thickness = 6;
+hook_retainer_thickness = 7.1;
 
 hook_rounding_r = 5;
 
@@ -73,7 +73,7 @@ module hook ()
         square ([hook_length, hook_thickness]);
 
         translate ([hook_length, 0])
-        rotate (60, Z)
+        rotate (45, Z)
         square ([hook_retainer_length, hook_retainer_thickness]);
     }
 }
